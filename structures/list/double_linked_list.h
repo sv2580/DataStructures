@@ -58,46 +58,12 @@ namespace structures
 		DoubleLinkedListItem<T>* _next;
 		DoubleLinkedListItem<T>* _prev;
 
-	private:
-		/// <summary> Iterator pre LinkedList. </summary>
-		class  DoubleLinkedListIterator : public Iterator<T>
-		{
-		public:
-			/// <summary> Konstruktor. </summary>
-			/// <param name = "position"> Pozicia v zretazenom zozname, na ktorej zacina. </param>
-			DoubleLinkedListIterator(DoubleLinkedListItem<T>* position);
 
-			/// <summary> Destruktor. </summary>
-			~DoubleLinkedListIterator();
-
-			/// <summary> Operator priradenia. Priradi do seba hodnotu druheho iteratora. </summary>
-			/// <param name = "other"> Druhy iterator. </param>
-			/// <returns> Vrati seba po priradeni. </returns>
-			Iterator<T>& operator= (Iterator<T>& other) override;
-
-			/// <summary> Porovna sa s druhym iteratorom na nerovnost. </summary>
-			/// <param name = "other"> Druhy iterator. </param>
-			/// <returns> True, ak sa iteratory nerovnaju, false inak. </returns>
-			bool operator!=(Iterator<T>& other) override;
-
-			/// <summary> Vrati data, na ktore aktualne ukazuje iterator. </summary>
-			/// <returns> Data, na ktore aktualne ukazuje iterator. </returns>
-			T operator*() override;
-
-			/// <summary> Posunie iterator na dalsi prvok v strukture. </summary>
-			/// <returns> Iterator na dalsi prvok v strukture. </returns>
-			/// <remarks> Zvycajne vrati seba. Ak vrati iny iterator, povodny bude automaticky zruseny. </remarks>
-			Iterator<T>& operator++() override;
-
-		private:
-			/// <summary> Aktualna pozicia v zozname. </summary>
-			DoubleLinkedListItem<T>* _position;
-		};
 
 	};
 
 	template<typename T>
-	class DoubleLinkedList : public LinkedL<T>
+	class DoubleLinkedList : public List<T>
 	{
 	public:
 		/// <summary> Konstruktor. </summary>
@@ -172,7 +138,7 @@ namespace structures
 
 
 	private:
-		DoubleLinkedList<T>* getItemAtIndex(int index);
+		DoubleLinkedListItem<T>* getItemAtIndex(int index);
 
 
 		/// <summary> Pocet prvkov v zozname. </summary>
@@ -181,7 +147,41 @@ namespace structures
 		DoubleLinkedListItem<T>* _first;
 		/// <summary> Posledny prvok zoznamu. </summary>
 		DoubleLinkedListItem<T>* _last;
+	private:
+		/// <summary> Iterator pre LinkedList. </summary>
+		class  DoubleLinkedListIterator : public Iterator<T>
+		{
+		public:
+			/// <summary> Konstruktor. </summary>
+			/// <param name = "position"> Pozicia v zretazenom zozname, na ktorej zacina. </param>
+			DoubleLinkedListIterator(DoubleLinkedListItem<T>* position);
 
+			/// <summary> Destruktor. </summary>
+			~DoubleLinkedListIterator();
+
+			/// <summary> Operator priradenia. Priradi do seba hodnotu druheho iteratora. </summary>
+			/// <param name = "other"> Druhy iterator. </param>
+			/// <returns> Vrati seba po priradeni. </returns>
+			Iterator<T>& operator= (Iterator<T>& other) override;
+
+			/// <summary> Porovna sa s druhym iteratorom na nerovnost. </summary>
+			/// <param name = "other"> Druhy iterator. </param>
+			/// <returns> True, ak sa iteratory nerovnaju, false inak. </returns>
+			bool operator!=(Iterator<T>& other) override;
+
+			/// <summary> Vrati data, na ktore aktualne ukazuje iterator. </summary>
+			/// <returns> Data, na ktore aktualne ukazuje iterator. </returns>
+			T operator*() override;
+
+			/// <summary> Posunie iterator na dalsi prvok v strukture. </summary>
+			/// <returns> Iterator na dalsi prvok v strukture. </returns>
+			/// <remarks> Zvycajne vrati seba. Ak vrati iny iterator, povodny bude automaticky zruseny. </remarks>
+			Iterator<T>& operator++() override;
+
+		private:
+			/// <summary> Aktualna pozicia v zozname. </summary>
+			DoubleLinkedListItem<T>* _position;
+		};
 	};
 
 	template<typename T>
@@ -194,14 +194,18 @@ namespace structures
 
 	template<typename T>
 	inline DoubleLinkedList<T>::DoubleLinkedList(DoubleLinkedList<T>& other)
+		: _size(0)
 	{
-		assign(*other);
+		this->assign(other);
 	}
 
 	template<typename T>
 	inline DoubleLinkedList<T>::~DoubleLinkedList()
 	{
 		clear();
+		_size = 0;
+		_first = nullptr;
+		_last = nullptr;
 	}
 
 	template<typename T>
@@ -253,7 +257,7 @@ namespace structures
 	template<typename T>
 	inline void DoubleLinkedList<T>::add(const T& data)
 	{
-		DoubleLinkedListItem<T>* newItem = new LinkedListItem<T>(data);
+		DoubleLinkedListItem<T>* newItem = new DoubleLinkedListItem<T>(data);
 		if (_size == 0) {
 			_first = newItem;
 			_last = newItem;
@@ -282,11 +286,15 @@ namespace structures
 			}
 			else {
 				DoubleLinkedListItem<T>* prevItem = getItemAtIndex(index - 1);
-				newItem->setNext(prevItem->getNext());
+				DoubleLinkedListItem<T>* nextItem = prevItem->getNext();
+
+				newItem->setNext(nextItem);
+				newItem->setPrev(prevItem);
 				prevItem->setNext(newItem);
+				nextItem->setPrev(newItem);
 			}
+			_size++;
 		}
-		_size++;
 	}
 
 	template<typename T>
@@ -317,18 +325,23 @@ namespace structures
 			{
 				delItem = _first;
 				_first = _first->getNext();
-				_first->getPrev = nullptr;
+				_first->setPrev(nullptr);
+
 
 			}
 			else {
 				DoubleLinkedListItem<T>* prevItem = getItemAtIndex(index - 1);
 				delItem = prevItem->getNext();
-				nextItem = delItem->getNext();
-				nextItem->setPrev(prevItem);
-				prevItem->setNext(nextItem);
 				if (_last == delItem) {
 					_last = prevItem;
+					_last->setNext(nullptr);
 				}
+				else {
+					DoubleLinkedListItem<T>* nextItem = delItem->getNext();
+					nextItem->setPrev(prevItem);
+					prevItem->setNext(nextItem);
+				}
+
 
 			}
 		}
@@ -342,15 +355,15 @@ namespace structures
 	template<typename T>
 	inline int DoubleLinkedList<T>::getIndexOf(const T& data)
 	{
-		if (size_ != 0)
+		if (_size != 0)
 		{
 			int index = 0;
-			DoubleLinkedListItem<T>* thisItem = first_;
+			DoubleLinkedListItem<T>* thisItem = _first;
 			DoubleLinkedListItem<T>* dataItem = new DoubleLinkedListItem<T>(data);
 
-			while (index <= size_)
+			while (index <= _size)
 			{
-				LinkedListItem<T>* nextItem = dataItem->getNext();
+				DoubleLinkedListItem<T>* nextItem = dataItem->getNext();
 				thisItem = nextItem;
 				if (thisItem == dataItem)
 				{
@@ -382,35 +395,37 @@ namespace structures
 	template<typename T>
 	inline Iterator<T>* DoubleLinkedList<T>::getBeginIterator()
 	{
-		return new DoubleLinkedListIterator(first_);
+		return new DoubleLinkedListIterator(_first);
 
 	}
 
 	template<typename T>
 	inline Iterator<T>* DoubleLinkedList<T>::getEndIterator()
 	{
-		return new DoubleLinkedListIterator(first_);
+		return new DoubleLinkedListIterator(nullptr);
 	}
 
 	template<typename T>
-	inline DoubleLinkedList<T>* DoubleLinkedList<T>::getItemAtIndex(int index)
+	inline DoubleLinkedListItem<T>* DoubleLinkedList<T>::getItemAtIndex(int index)
 	{
-		Utils::rangeCheckExcept(index, size_, "Invalid index!");
-		if (index > _size / 2) {
-			DoubleLinkedListItem<T>* result = last_;
-			for (size_t i = _size; i > _size - index; i--)
+		Utils::rangeCheckExcept(index, _size, "Invalid index!");
+		DoubleLinkedListItem<T>* result;
+		if (index > (_size + 1) / 2) {
+			result = _last;
+			for (size_t i = _size; i > _size - index - 1; i--)
 			{
 				result = result->getPrev();
 			}
 		}
 		else {
-			DoubleLinkedListItem<T>* result = first_;
+			result = _first;
 			for (size_t i = 0; i < index; i++)
 			{
 				result = result->getNext();
-				return result;
 			}
 		}
+		return result;
+
 	}
 
 
@@ -464,39 +479,40 @@ namespace structures
 
 
 
+
 	template<typename T>
-	inline DoubleLinkedListItem<T>::DoubleLinkedListIterator::DoubleLinkedListIterator(DoubleLinkedListItem<T>* position)
-		:(position)
+	inline DoubleLinkedList<T>::DoubleLinkedListIterator::DoubleLinkedListIterator(DoubleLinkedListItem<T>* position)
 	{
+		_position = position;
 	}
 
 	template<typename T>
-	inline DoubleLinkedListItem<T>::DoubleLinkedListIterator::~DoubleLinkedListIterator()
+	inline DoubleLinkedList<T>::DoubleLinkedListIterator::~DoubleLinkedListIterator()
 	{
-		_position = 0;
+		_position = nullptr;
 	}
 
 	template<typename T>
-	inline Iterator<T>& DoubleLinkedListItem<T>::DoubleLinkedListIterator::operator=(Iterator<T>& other)
+	inline Iterator<T>& DoubleLinkedList<T>::DoubleLinkedListIterator::operator=(Iterator<T>& other)
 	{
 		_position = dynamic_cast<const DoubleLinkedListIterator&>(other)._position;
 		return *this;
 	}
 
 	template<typename T>
-	inline bool DoubleLinkedListItem<T>::DoubleLinkedListIterator::operator!=(Iterator<T>& other)
+	inline bool DoubleLinkedList<T>::DoubleLinkedListIterator::operator!=(Iterator<T>& other)
 	{
 		return _position != dynamic_cast<const DoubleLinkedListIterator&>(other)._position;
 	}
 
 	template<typename T>
-	inline T DoubleLinkedListItem<T>::DoubleLinkedListIterator::operator*()
+	inline T DoubleLinkedList<T>::DoubleLinkedListIterator::operator*()
 	{
 		return _position->accessData();
 	}
 
 	template<typename T>
-	inline Iterator<T>& DoubleLinkedListItem<T>::DoubleLinkedListIterator::operator++()
+	inline Iterator<T>& DoubleLinkedList<T>::DoubleLinkedListIterator::operator++()
 	{
 		_position = _position->getNext();
 		return *this;

@@ -1,8 +1,9 @@
 #include "list_test.h"
+#include "../../file_log_consumer.h"
 
 namespace tests
 {
-// ListTestInterface:
+	// ListTestInterface:
 
 	ListTestInterface::ListTestInterface(std::string name) :
 		SimpleTest(std::move(name))
@@ -29,7 +30,7 @@ namespace tests
 		this->logPass("Compiled.");
 	}
 
-// ArrayListTestInterface:
+	// ArrayListTestInterface:
 
 	ArrayListTestInterface::ArrayListTestInterface() :
 		ListTestInterface("Interface")
@@ -57,7 +58,7 @@ namespace tests
 		return new structures::ArrayList<int>();
 	}
 
-// LinkedListTestInterface:
+	// LinkedListTestInterface:
 
 	LinkedListTestInterface::LinkedListTestInterface() :
 		ListTestInterface("Interface")
@@ -80,20 +81,53 @@ namespace tests
 		this->logPass("Compiled.");
 	}
 
+	DoubleLinkedListTestInterface::DoubleLinkedListTestInterface() : ListTestInterface("Interface")
+	{
+		int x = 0;
+		structures::List<int>* list = this->makeList();
+		list->add(x);
+		list->assign(*list);
+		list->clear();
+		delete list->getBeginIterator();
+		delete list->getEndIterator();
+		list->getIndexOf(x);
+		list->insert(x, x);
+		list->isEmpty();
+		list->operator[](0);
+		list->removeAt(0);
+		list->size();
+		list->tryRemove(x);
+		delete list;
+		this->logPass("Compiled.");
+	}
+
+	structures::List<int>* DoubleLinkedListTestInterface::makeList() const
+	{
+		return new structures::DoubleLinkedList<int>();
+	}
+
+
 	structures::List<int>* LinkedListTestInterface::makeList() const
 	{
 		return new structures::LinkedList<int>();
 	}
 
-// ArrayListTestOverall:
+	// ArrayListTestOverall:
 
 	ArrayListTestOverall::ArrayListTestOverall() :
 		ComplexTest("ArrayList")
 	{
 		addTest(new ArrayListTestInterface());
+		addTest(new ArrayListEquals());
+		addTest(new ArrayListAddInsert());
+		addTest(new ArrayListAssign());
+		addTest(new ArrayListCopy());
+		addTest(new ArrayListClear());
+		addTest(new ArrayListRemove());
+		addTest(new ArrayListPerformanceTest());
 	}
 
-// LinkedListTestOverall:
+	// LinkedListTestOverall:
 
 	LinkedListTestOverall::LinkedListTestOverall() :
 		ComplexTest("LinkedList")
@@ -101,19 +135,158 @@ namespace tests
 		addTest(new LinkedListTestInterface());
 	}
 
-// ListTestOverall:
+	DoubleLinkedListTestOverall::DoubleLinkedListTestOverall() :
+		ComplexTest("DoubleLinkedList")
+	{
+		addTest(new DoubleLinkedListTestInterface());
+		addTest(new DoubleLinkedListEquals());
+		addTest(new DoubleLinkedListAddInsert());
+		addTest(new DoubleLinkedListAssign());
+		addTest(new DoubleLinkedListCopy());
+		addTest(new DoubleLinkedListClear());
+		addTest(new DoubleLinkedListRemove());
+
+		addTest(new DoubleLinkedListPerformanceTest());
+	}
+
+	// ListTestOverall:
 
 	ListTestOverall::ListTestOverall() :
 		ComplexTest("List")
 	{
 		addTest(new ArrayListTestOverall());
 		addTest(new LinkedListTestOverall());
+		addTest(new DoubleLinkedListTestOverall());
 	}
+
+	ListPerformanceTest::ListPerformanceTest() : SimpleTest("Performance test")
+	{
+	}
+
+	void ListPerformanceTest::test()
+	{
+	}
+
+	void ListPerformanceTest::testList(structures::List<int>* list, char script, std::string file, int count)
+	{
+		int insert, removeAt, at, getIndexOf;
+		switch (script)
+		{
+		case 'A':
+			insert = 20;
+			removeAt = 20;
+			at = 50;
+			getIndexOf = 10;
+			break;
+		case 'B':
+			insert = 35;
+			removeAt = 35;
+			at = 20;
+			getIndexOf = 10;
+			break;
+		case 'C':
+			insert = 45;
+			removeAt = 45;
+			at = 5;
+			getIndexOf = 5;
+			break;
+		}
+		structures::FileLogConsumer* consumer = new structures::FileLogConsumer(file);
+		std::string message = "Testing script ";
+		message.append(&script);
+		consumer->logMessage(structures::LogType::Info, message);
+
+		for (int i = 0; i < count; i++)
+		{
+			if(i == 23)
+			logInfo(std::to_string(i));
+
+			int random = rand() % 100 + 1;
+			if (random <= insert) {
+				int index;
+				if (!list->isEmpty()) {
+					 index = rand() % list->size();
+				}
+				else
+					 index = 0;
+
+				startStopwatch();
+				list->insert(index, index);
+				stopStopwatch();
+				consumer->logDuration(0, getElapsedTime(), "insert ; " + std::to_string(list->size()));
+
+			}
+			else if (insert < random && random <= insert + removeAt) {
+				if (!list->isEmpty()) {
+					int index = rand() % list->size();
+					startStopwatch();
+					list->removeAt(index);
+					stopStopwatch();
+					consumer->logDuration(0, getElapsedTime(), "removeAt ; " + std::to_string(list->size()));
+				}
+			}
+			else if (insert + removeAt < random && random <= insert + removeAt + at) {
+				if (!list->isEmpty()) {
+					int index = rand() % list->size();
+					startStopwatch();
+					list->at(index);
+					stopStopwatch();
+					consumer->logDuration(0, getElapsedTime(), "at ; " + std::to_string(list->size()));
+				}
+			}
+			else {
+				if (!list->isEmpty()) {
+
+					int random = rand() % list->size();
+					startStopwatch();
+					list->getIndexOf(random);
+					stopStopwatch();
+					consumer->logDuration(0, getElapsedTime(), "getIndexOf ; " + std::to_string(list->size()));
+				}
+			}
+
+		}
+		
+		delete consumer;
+	}
+
+
+
+	void ArrayListPerformanceTest::test()
+	{
+		char script = 'A';
+		for (int i = 0; i < 3; i++)
+		{
+			structures::List<int>* list = new structures::ArrayList<int>();
+			std::string file = "ArrayList";
+			file.append(&script);
+			this->testList(list, script, file + ".csv", 100000);
+			script++;
+			delete list;
+		}
+	}
+
+
+	void DoubleLinkedListPerformanceTest::test()
+	{
+		char script = 'A';
+		for (int i = 0; i < 3; i++)
+		{
+			structures::List<int>* list = new structures::DoubleLinkedList<int>();
+			std::string file = "DoubleLinkedList";
+			file.append(&script);
+			this->testList(list, script, file + ".csv", 100000);
+			script++;
+			delete list;
+		}
+	}
+
+
 
 	//assign,equals,at,add,insert,remove,clear
 
 
-	
+
 	void ListAssign::test()
 	{
 	}
@@ -121,7 +294,7 @@ namespace tests
 	void ListAssign::testAssign(structures::List<int>* list, structures::List<int>* list2)
 	{
 		logInfo("Testing assing values to first list and assigning to second");
-		
+
 		for (size_t i = 0; i < 25; i++)
 		{
 			list->add(i);
@@ -153,8 +326,8 @@ namespace tests
 		{
 			list->add(rand() % 10);
 			list2->add(rand() % 10);
-			l1 += list->at(i);
-			l2 += list2->at(i);
+			l1 += std::to_string(list->at(i));
+			l2 += std::to_string(list2->at(i));
 		}
 
 		logInfo(l1);
@@ -171,8 +344,8 @@ namespace tests
 			logError("Lists are not equal");
 	}
 
-	ListEquals::ListEquals() : SimpleTest("assign")
-	{		
+	ListEquals::ListEquals() : SimpleTest("Equals")
+	{
 	}
 
 	void ListAddInsert::test()
@@ -193,18 +366,23 @@ namespace tests
 		for (size_t i = 0; i < 10; i++)
 		{
 			list->add(rand() % 10);
-			l1 += list->at(i);
 		}
+
+		for (size_t i = 0; i < 10; i++)
+		{
+			l1 += std::to_string(list->at(i));
+		}
+
 
 		logInfo(l1);
 		l1 = "";
 		logInfo("Inserting random values to list - last place, end, middle");
 		list->insert(rand() % 10, 0);
-		list->insert(rand() % 10, 5);
-		list->insert(rand() % 10, 10);
+		list->insert(rand() % 10, 4);
+		list->insert(rand() % 10, 9);
 		for (size_t i = 0; i < list->size(); i++)
 		{
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 		logInfo(l1);
 		logPass("Test compilled");
@@ -225,18 +403,18 @@ namespace tests
 		for (size_t i = 0; i < 10; i++)
 		{
 			list->add(rand() % 10);
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 
 		logInfo(l1);
 		l1 = "";
-		logInfo("Deleting random values from list - last place, end, middle");
+		logInfo("Deleting values from list - last place, end, middle");
 		list->removeAt(0);
-		list->removeAt(5);
-		list->removeAt(10);
+		list->removeAt(3);
+		list->removeAt(7);
 		for (size_t i = 0; i < list->size(); i++)
 		{
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 		logInfo(l1);
 		l1 = "";
@@ -245,13 +423,13 @@ namespace tests
 		list->tryRemove(list->at(5));
 		for (size_t i = 0; i < list->size(); i++)
 		{
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 		logInfo(l1);
 		logPass("Test compilled");
 	}
 
-	ListRemove::ListRemove() : SimpleTest("assign")
+	ListRemove::ListRemove() : SimpleTest("Remove")
 	{
 	}
 
@@ -269,7 +447,7 @@ namespace tests
 		for (size_t i = 0; i < 10; i++)
 		{
 			list->add(rand() % 10);
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 
 		logInfo(l1);
@@ -278,20 +456,183 @@ namespace tests
 		l1 = "";
 		for (size_t i = 0; i < list->size(); i++)
 		{
-			l1 += list->at(i);
+			l1 += std::to_string(list->at(i));
 		}
 		logInfo(l1);
 		logPass("Test compilled");
 
 	}
 
-	ListClear::ListClear() : SimpleTest("assign")
+	ListClear::ListClear() : SimpleTest("Clear")
 	{
 
 	}
 
 
-	
+	void DoubleLinkedListAssign::test()
+	{
+		structures::List<int>* list = new structures::DoubleLinkedList<int>();
+		structures::List<int>* list2 = new structures::DoubleLinkedList<int>();
+
+		this->testAssign(list, list2);
+
+		delete list;
+		delete list2;
+	}
+
+	void DoubleLinkedListEquals::test()
+	{
+		structures::List<int>* list = new structures::DoubleLinkedList<int>();
+		structures::List<int>* list2 = new structures::DoubleLinkedList<int>();
+
+		this->testEquals(list, list2);
+
+		delete list;
+		delete list2;
+	}
+
+
+	void DoubleLinkedListAddInsert::test()
+	{
+		structures::List<int>* list = new structures::DoubleLinkedList<int>();
+
+		this->testAddInsert(list);
+
+		delete list;
+	}
+
+
+	void DoubleLinkedListRemove::test()
+	{
+		structures::List<int>* list = new structures::DoubleLinkedList<int>();
+
+		this->testRemove(list);
+
+		delete list;
+	}
+
+
+	void DoubleLinkedListClear::test()
+	{
+		structures::List<int>* list = new structures::DoubleLinkedList<int>();
+
+		this->testClear(list);
+
+		delete list;
+	}
+
+
+	void ArrayListAssign::test()
+	{
+		structures::List<int>* list = new structures::ArrayList<int>();
+		structures::List<int>* list2 = new structures::ArrayList<int>();
+
+		this->testAssign(list, list2);
+
+		delete list;
+		delete list2;
+	}
+
+
+	void ArrayListEquals::test()
+	{
+		structures::List<int>* list = new structures::ArrayList<int>();
+		structures::List<int>* list2 = new structures::ArrayList<int>();
+
+		this->testEquals(list, list2);
+
+		delete list;
+		delete list2;
+	}
+
+
+	void ArrayListAddInsert::test()
+	{
+		structures::List<int>* list = new structures::ArrayList<int>();
+
+		this->testAddInsert(list);
+
+		delete list;
+	}
+
+
+	void ArrayListRemove::test()
+	{
+		structures::List<int>* list = new structures::ArrayList<int>();
+
+		this->testRemove(list);
+
+		delete list;
+	}
+
+
+	void ArrayListClear::test()
+	{
+		structures::List<int>* list = new structures::ArrayList<int>();
+
+		this->testClear(list);
+
+		delete list;
+	}
+
+
+
+	DoubleLinkedListCopy::DoubleLinkedListCopy() : SimpleTest("Copy")
+	{
+	}
+
+	void DoubleLinkedListCopy::test()
+	{
+
+		logInfo("Testing copy, adding values to first list and copying the first list to second");
+		structures::DoubleLinkedList<int>* list = new structures::DoubleLinkedList<int>();
+
+		for (size_t i = 0; i < 25; i++)
+		{
+			list->add(i);
+		}
+		structures::DoubleLinkedList<int>* list2 = new structures::DoubleLinkedList<int>(*list);
+
+		if (list2->equals(*list))
+			logPass("Lists are equal");
+		else
+			logError("Lists are not equal");
+
+		delete list;
+		delete list2;
+	}
+
+
+
+	ArrayListCopy::ArrayListCopy() : SimpleTest("Copy")
+	{
+	}
+
+	void ArrayListCopy::test()
+	{
+
+		logInfo("Testing copy, adding values to first list and copying the first list to second");
+		structures::ArrayList<int>* list = new structures::ArrayList<int>();
+
+		for (size_t i = 0; i < 25; i++)
+		{
+			list->add(i);
+		}
+		structures::ArrayList<int>* list2 = new structures::ArrayList<int>(*list);
+
+		if (list->equals(*list2))
+			logPass("Lists are equal");
+		else
+			logError("Lists are not equal");
+
+		delete list;
+		delete list2;
+	}
+
+
+
+
+
 
 
 }

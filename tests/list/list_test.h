@@ -3,6 +3,8 @@
 #include "../test.h"
 #include "../../structures/list/array_list.h"
 #include "../../structures/list/linked_list.h"
+#include "../../structures/list/double_linked_list.h"
+#include "../../structures/heap_monitor.h"
 
 namespace tests
 {
@@ -29,6 +31,16 @@ namespace tests
 	{
 	public:
 		ArrayListTestInterface();
+
+	protected:
+		structures::List<int>* makeList() const override;
+	};
+
+	class DoubleLinkedListTestInterface
+		: public ListTestInterface
+	{
+	public:
+		DoubleLinkedListTestInterface();
 
 	protected:
 		structures::List<int>* makeList() const override;
@@ -67,6 +79,13 @@ namespace tests
 		LinkedListTestOverall();
 	};
 
+	class DoubleLinkedListTestOverall
+		: public ComplexTest
+	{
+	public:
+		DoubleLinkedListTestOverall();
+	};
+
 	/// <summary>
 	/// Zahrna v sebe vsetky testy, ktore testuju ArrayList a LinkedList.
 	/// </summary>
@@ -100,7 +119,6 @@ namespace tests
 	};
 
 
-
 	class ListRemove : public SimpleTest {
 	public:
 		void test() override;
@@ -113,5 +131,129 @@ namespace tests
 		void test() override;
 		void testClear(structures::List<int>* list);
 		ListClear();
+	};
+
+
+
+	class DoubleLinkedListAssign : public ListAssign {
+	public:
+		void test() override;
+	};
+
+	class DoubleLinkedListEquals : public ListEquals {
+	public:
+		void test() override;
+	};
+
+
+	class DoubleLinkedListAddInsert : public ListAddInsert {
+	public:
+		void test() override;
+	};
+
+
+	class DoubleLinkedListRemove : public ListRemove {
+	public:
+		void test() override;
+	};
+
+	class DoubleLinkedListClear : public ListClear {
+	public:
+		void test() override;
+	};
+
+	class DoubleLinkedListCopy : public SimpleTest {
+	public:
+		DoubleLinkedListCopy();
+		void test() override;
+
+	};
+
+	class ArrayListCopy : public SimpleTest {
+	public:
+		ArrayListCopy();
+		void test() override;
+	};
+	class ArrayListAssign : public ListAssign {
+	public:
+		void test() override;
+	};
+
+	class ArrayListEquals : public ListEquals {
+	public:
+		void test() override;
+	};
+
+	class ArrayListAddInsert : public ListAddInsert {
+	public:
+		void test() override;
+	};
+
+
+	class ArrayListRemove : public ListRemove {
+	public:
+		void test() override;
+	};
+
+	class ArrayListClear : public ListClear {
+	public:
+		void test() override;
+	};
+
+    //**********druha uloha**********
+	class ListPerformanceTest : public SimpleTest {
+	public:
+		ListPerformanceTest();
+		void test() override;
+		void ListPerformanceTest::testList(structures::List<int>* list, char script, std::string file, int count);
+	};
+
+
+	class ArrayListPerformanceTest : public ListPerformanceTest {
+	public:
+		void test() override;
+	};
+
+
+	class DoubleLinkedListPerformanceTest : public ListPerformanceTest {
+	public:
+		void test() override;
+	};
+
+
+	//**********tretia uloha**********
+
+
+	class ListTimeAnalysis : public SimpleTest {
+	public:
+		
+
+	};
+
+
+	class ArrayListTimeAnalysis : public ListTimeAnalysis {
+	public:
+		void test() override;
+	};
+
+
+	class LinkedListTimeAnalysis : public ListTimeAnalysis {
+	public:
+		void test() override;
+	};
+
+
+
+
+
+
+	class ListMaker {
+	public: 
+		virtual structures::List<int>* makeList() const = 0;
+	};
+
+	class ArrayListMaker : ListMaker {
+		// Inherited via ListMaker
+		virtual structures::List<int>* makeList() const override;
 	};
 }

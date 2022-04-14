@@ -214,7 +214,7 @@ namespace structures
 	template<typename T>
 	inline LinkedList<T>::~LinkedList()
 	{
-		//TODO 04: LinkedList
+		clear();
 	}
 
 	template<typename T>
@@ -286,6 +286,7 @@ namespace structures
 	{
 		if (index == static_cast<int>(size_)) {
 			add(data);
+
 		}
 		else {
 
@@ -300,8 +301,9 @@ namespace structures
 				newItem->setNext(prevItem->getNext());
 				prevItem->setNext(newItem);
 			}
+			size_++;
+
 		}
-		size_++;
 	}
 
 	template<typename T>
@@ -401,7 +403,7 @@ namespace structures
 	template<typename T>
 	inline Iterator<T>* LinkedList<T>::getEndIterator()
 	{
-		return new LinkedListIterator(first_);
+		return new LinkedListIterator(nullptr);
 	}
 
 	template<typename T>
@@ -436,7 +438,7 @@ namespace structures
 	template<typename T>
 	inline LinkedList<T>::LinkedListIterator::~LinkedListIterator()
 	{
-		position_ = 0;
+		position_ = nullptr;
 	}
 
 	template<typename T>

@@ -326,9 +326,6 @@
     <ClInclude Include="structures\list\double_linked_list.h">
       <Filter>structures\list</Filter>
     </ClInclude>
-    <ClInclude Include="double_linked_from_linked.h">
-      <Filter>structures\list</Filter>
-    </ClInclude>
     <ClInclude Include="structures\matrix\incoherent_matrix.h">
       <Filter>structures\matrix</Filter>
     </ClInclude>

@@ -145,7 +145,6 @@
     <ClCompile Include="tests\vector\vector_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="double_linked_from_linked.h" />
     <ClInclude Include="file_log_consumer.h" />
     <ClInclude Include="gui\gui_log_consumer.h" />
     <ClInclude Include="gui\main_form.h">

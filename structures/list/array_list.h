@@ -240,6 +240,7 @@ namespace structures
 	template<typename T>
 	inline T ArrayList<T>::removeAt(int index)
 	{
+		Utils::rangeCheckExcept(index, size_, "Invalid index");
 		T deleted = (*this)[index];
 		Array<T>::copy(*array_, static_cast<int>(index+1), *array_, static_cast<int>(index), static_cast<int>(size_ - index - 1));
 		size_--;
