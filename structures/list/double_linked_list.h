@@ -410,9 +410,9 @@ namespace structures
 	{
 		Utils::rangeCheckExcept(index, _size, "Invalid index!");
 		DoubleLinkedListItem<T>* result;
-		if (index > (_size + 1) / 2) {
+		if (_size > 1 && index  >= _size / 2) {
 			result = _last;
-			for (size_t i = _size; i > _size - index - 1; i--)
+			for (size_t i = 0; i < _size - index - 1 ; i++)
 			{
 				result = result->getPrev();
 			}

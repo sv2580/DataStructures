@@ -330,6 +330,14 @@ namespace tests
 			l2 += std::to_string(list2->at(i));
 		}
 
+		for (size_t i = 0; i < 10; i++)
+		{
+			list->add(rand() % 10);
+			list2->add(rand() % 10);
+			l1 += std::to_string(list->at(i));
+			l2 += std::to_string(list2->at(i));
+		}
+
 		logInfo(l1);
 		logInfo(l2);
 		if (list2->equals(*list))
@@ -365,7 +373,7 @@ namespace tests
 
 		for (size_t i = 0; i < 10; i++)
 		{
-			list->add(rand() % 10);
+			list->add(i+1);
 		}
 
 		for (size_t i = 0; i < 10; i++)
@@ -376,10 +384,10 @@ namespace tests
 
 		logInfo(l1);
 		l1 = "";
-		logInfo("Inserting random values to list - last place, end, middle");
-		list->insert(rand() % 10, 0);
-		list->insert(rand() % 10, 4);
-		list->insert(rand() % 10, 9);
+		logInfo("Inserting 0 to list - last place, end, middle");
+		list->insert(0, 0);
+		list->insert(0, 5);
+		list->insert(0, 12);
 		for (size_t i = 0; i < list->size(); i++)
 		{
 			l1 += std::to_string(list->at(i));
