@@ -125,6 +125,7 @@ namespace tests
 		addTest(new ArrayListClear());
 		addTest(new ArrayListRemove());
 		addTest(new ArrayListPerformanceTest());
+		addTest(new ArrayListTimeAnalysis());
 	}
 
 	// LinkedListTestOverall:
@@ -132,7 +133,7 @@ namespace tests
 	LinkedListTestOverall::LinkedListTestOverall() :
 		ComplexTest("LinkedList")
 	{
-		addTest(new LinkedListTestInterface());
+		//addTest(new LinkedListTestInterface());
 	}
 
 	DoubleLinkedListTestOverall::DoubleLinkedListTestOverall() :
@@ -147,6 +148,7 @@ namespace tests
 		addTest(new DoubleLinkedListRemove());
 
 		addTest(new DoubleLinkedListPerformanceTest());
+		addTest(new DoubleLinkedListTimeAnalysis());
 	}
 
 	// ListTestOverall:
@@ -195,11 +197,9 @@ namespace tests
 		std::string message = "Testing script ";
 		message.append(&script);
 		consumer->logMessage(structures::LogType::Info, message);
-
+		srand(time(0));
 		for (int i = 0; i < count; i++)
 		{
-			if(i == 23)
-			logInfo(std::to_string(i));
 
 			int random = rand() % 100 + 1;
 			if (random <= insert) {
@@ -281,6 +281,102 @@ namespace tests
 		}
 	}
 
+
+//
+
+
+
+
+	ListTimeAnalysis::ListTimeAnalysis() : SimpleTest("TimeAnalysis")
+	{
+	}
+
+	void ListTimeAnalysis::testListAt(structures::List<int>* list, std::string file)
+	{
+		structures::FileLogConsumer* consumer = new structures::FileLogConsumer(file);
+		for (int i = 1; i <= 100; i++) { //pocet kolko * tisic prvkov budee v zozname
+			int size = list->size();
+			for (int j = 0; j < (1000 * i) - size; j++) //naplnenie zoznamu tisic*i prvkov
+			{
+				list->add(i);
+			}
+			for (int j = 0; j < 100; j++) //vykonanie operacie 100 krat pre danu velkost
+			{
+				int index = rand() % list->size();
+				startStopwatch();
+				list->at(index);
+				stopStopwatch();
+				consumer->logDuration(0, getElapsedTime(), "at ; " + std::to_string(list->size()));
+			}
+		}
+		delete consumer;
+		delete list;
+
+	}
+
+	void ListTimeAnalysis::testListRemoveAt(structures::List<int>* list, std::string file)
+	{
+		structures::FileLogConsumer* consumer = new structures::FileLogConsumer(file);
+		for (int i = 1; i <= 100; i++) { //pocet kolko * tisic prvkov budee v zozname
+			int size = list->size();
+			for (int j = 0; j <  (1000 * i) - size; j++) //naplnenie zoznamu tisic*i prvkov
+			{
+
+				list->add(i);
+			}
+			for (int j = 0; j < 100; j++) //vykonanie operacie 100 krat pre danu velkost
+			{
+				int index = rand() % list->size();
+				startStopwatch();
+				list->removeAt(index);
+				stopStopwatch();
+				consumer->logDuration(0, getElapsedTime(), "removeAt ; " + std::to_string(list->size()));
+			}
+		}
+		delete consumer;
+		delete list;
+
+	}
+
+	void ListTimeAnalysis::testInsert(structures::List<int>* list, std::string file)
+	{
+		structures::FileLogConsumer* consumer = new structures::FileLogConsumer(file);
+		for (int i = 1; i <= 100; i++) { //pocet kolko * tisic prvkov budee v zozname
+			int size = list->size();
+			for (int j = 0; j < (1000 * i) - size; j++) //naplnenie zoznamu tisic*i prvkov
+			{
+				list->add(i);
+			}
+			for (int j = 0; j < 100; j++) //vykonanie operacie 100 krat pre danu velkost
+			{
+				int index = rand() % list->size();
+				startStopwatch();
+				list->insert(j,index);
+				stopStopwatch();
+				consumer->logDuration(0, getElapsedTime(), "insert ; " + std::to_string(list->size()));
+			}
+		}
+		delete consumer;
+		delete list;
+	}
+
+
+	void ArrayListTimeAnalysis::test()
+	{
+		//this->testListAt(new structures::ArrayList<int>(), "AL_Time_At.csv");
+		//this->testListRemoveAt(new structures::ArrayList<int>(), "AL_Time_RemoveAt.csv");
+		this->testInsert(new structures::ArrayList<int>(), "AL_Time_Insert.csv");
+
+
+	}
+
+
+	void DoubleLinkedListTimeAnalysis::test()
+	{
+		//this->testListAt(new structures::DoubleLinkedList<int>(), "DLL_Time_At.csv");
+		//this->testListRemoveAt(new structures::DoubleLinkedList<int>(), "DLL_Time_RemoveAt.csv");
+		this->testInsert(new structures::DoubleLinkedList<int>(), "DLL_Time_Insert.csv");
+	}
 
 
 	//assign,equals,at,add,insert,remove,clear
@@ -410,7 +506,7 @@ namespace tests
 
 		for (size_t i = 0; i < 10; i++)
 		{
-			list->add(rand() % 10);
+			list->insert(rand() % 10,list->size() - 1);
 			l1 += std::to_string(list->at(i));
 		}
 
@@ -427,8 +523,8 @@ namespace tests
 		logInfo(l1);
 		l1 = "";
 
-		logInfo("Trying to remove value");
-		list->tryRemove(list->at(5));
+		logInfo("Trying to remove value that is on the 0 index");
+		list->tryRemove(list->at(0));
 		for (size_t i = 0; i < list->size(); i++)
 		{
 			l1 += std::to_string(list->at(i));
@@ -636,7 +732,6 @@ namespace tests
 		delete list;
 		delete list2;
 	}
-
 
 
 

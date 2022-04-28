@@ -69,7 +69,7 @@ namespace tests
 
         //structures::Logger::getInstance().logError("This is error.");
 
-        //structures::Logger::getInstance().logDuration(100,Milliseconds(123),"This is duration.");
+        //structures::Logger::getInstance().logDuration(100,DurationType(123),"This is duration.");
     }
 
 
@@ -110,7 +110,7 @@ namespace tests
 
         //structures::Logger::getInstance().logError("This is error.");
 
-        //structures::Logger::getInstance().logDuration(100,Milliseconds(123),"This is duration.");
+        //structures::Logger::getInstance().logDuration(100,DurationType(123),"This is duration.");
     }
 
 

@@ -215,6 +215,7 @@ namespace structures
 	inline LinkedList<T>::~LinkedList()
 	{
 		clear();
+		size_ = 0;
 	}
 
 	template<typename T>

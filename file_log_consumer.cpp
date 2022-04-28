@@ -17,7 +17,7 @@ namespace structures
 		fileStream_ << logTypeToString(type) << ';' << message << std::endl;
 	}
 
-	void FileLogConsumer::logDuration(size_t size, Milliseconds duration, const std::string& message)
+	void FileLogConsumer::logDuration(size_t size, DurationType duration, const std::string& message)
 	{
 		fileStream_ << logTypeToString(LogType::Duration) << ';'
 			<< duration.count() << ';'

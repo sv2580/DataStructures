@@ -55,7 +55,7 @@ namespace structures
         /// <param name = "other"> Struktura, z ktorej ma prebrat vlastnosti. </param>
         /// <returns> Adresa, na ktorej sa struktura nachadza. </returns>
         /// <summary>
-        Structure& assign(PriorityQueueList<T>& other);
+        Structure& assignPrioQueueList(PriorityQueueList<T>& other);
 
     protected:
         /// <summary> Smernik na zoznam, do ktoreho sa ukladaju prvky prioritneho frontu. </summary>
@@ -71,55 +71,82 @@ namespace structures
     template<typename T>
     inline PriorityQueueList<T>::~PriorityQueueList()
     {
-        //TODO 06: PriorityQueueList
+        clear();
+        delete list_;
+        list_ = nullptr;
     }
 
     template<typename T>
     inline size_t PriorityQueueList<T>::size()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::size: Not implemented yet.");
+        return list_->size();
     }
 
     template<typename T>
     inline void PriorityQueueList<T>::clear()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::size: Not implemented yet.");
+        for (PriorityQueueItem<T>* item : *list_) {
+            delete item;
+        }
+        list_->clear();
     }
 
     template<typename T>
     inline int PriorityQueueList<T>::indexOfPeek()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::indexOfPeek: Not implemented yet.");
+        if (list_->isEmpty()) {
+            throw std::logic_error("Priority Queue is empty!");
+        }
+
+        int priorityBest = INT_MAX;
+        int indexBest = 0;
+        int current = 0;
+        for (PriorityQueueItem<T>* item : *list_)
+        {
+            if (item->getPriority() < priorityBest) {
+                priorityBest = item->getPriority();
+                indexBest = current;
+            }
+            current++;
+        }
+        return indexBest;
     }
 
     template<typename T>
-    inline Structure& PriorityQueueList<T>::assign(PriorityQueueList<T>& other)
+    inline Structure& PriorityQueueList<T>::assignPrioQueueList(PriorityQueueList<T>& other)
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::assign: Not implemented yet.");
+        if (this != &other)
+        {
+            clear();
+            for (PriorityQueueItem<T>* item : *other.list_)
+            {
+                list_->add(new PriorityQueueItem<T>(*item));
+            }
+            list_->clear();
+        }
+        return *this;
     }
 
     template<typename T>
     inline T PriorityQueueList<T>::pop()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::pop: Not implemented yet.");
+        PriorityQueueItem<T>* item = list_->removeAt(indexOfPeek());
+        T result = item->accessData();
+        delete item;
+        return result;
+
     }
 
     template<typename T>
     inline T& PriorityQueueList<T>::peek()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::peek: Not implemented yet.");
+        return (*list_).at(indexOfPeek())->accessData();
     }
 
     template<typename T>
     inline int PriorityQueueList<T>::peekPriority()
     {
-        //TODO 06: PriorityQueueList
-        throw std::runtime_error("PriorityQueueList<T>::peekPriority: Not implemented yet.");
+        return (*list_).at(indexOfPeek())->getPriority();
+
     }
 }

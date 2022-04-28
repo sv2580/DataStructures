@@ -226,7 +226,10 @@ namespace tests
 
 	class ListTimeAnalysis : public SimpleTest {
 	public:
-		
+		ListTimeAnalysis();
+		void testListAt(structures::List<int>* list, std::string file);
+		void testListRemoveAt(structures::List<int>* list, std::string file);
+		void testInsert(structures::List<int>* list, std::string file);
 
 	};
 
@@ -237,7 +240,7 @@ namespace tests
 	};
 
 
-	class LinkedListTimeAnalysis : public ListTimeAnalysis {
+	class DoubleLinkedListTimeAnalysis : public ListTimeAnalysis {
 	public:
 		void test() override;
 	};

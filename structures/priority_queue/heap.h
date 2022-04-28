@@ -69,41 +69,75 @@ namespace structures
 	template<typename T>
 	inline Structure& Heap<T>::assign(Structure& other)
 	{
-		return PriorityQueueList<T>::assign(dynamic_cast<PriorityQueueList<T>&>(other));
+		return PriorityQueueList<T>::assignPrioQueueList(dynamic_cast<PriorityQueueList<T>&>(other));
 	}
 
 	template<typename T>
 	void Heap<T>::push(int priority, const T& data)
 	{
-		//TODO 06: Heap
-		throw std::runtime_error("Heap<T>::push: Not implemented yet.");
+		PriorityQueueList<T>::list_->add(new PriorityQueueItem<T>(priority, data));
+
+		int current = static_cast<int>(PriorityQueueList<T>::list_->size()) - 1;
+		int parent = getParentIndex(current);
+		while (parent >= 0 && PriorityQueueList<T>::list_->at(current)->getPriority() < PriorityQueueList<T>::list_->at(parent)->getPriority())
+		{
+			Utils::swap(PriorityQueueList<T>::list_->at(current), PriorityQueueList<T>::list_->at(parent));
+			current = parent;
+			parent = getParentIndex(current);
+		}
 	}
 
 	template<typename T>
 	T Heap<T>::pop()
 	{
-		//TODO 06: Heap
-		throw std::runtime_error("Heap<T>::pop: Not implemented yet.");
+		PriorityQueueItem<T>* item = (*PriorityQueueList<T>::list_).at(0);
+		
+		PriorityQueueList<T>::list_->at(0) = PriorityQueueList<T>::list_->at(static_cast<int>(PriorityQueueList<T>::list_->size()) - 1);
+		PriorityQueueList<T>::list_->removeAt(static_cast<int>(PriorityQueueList<T>::list_->size()) - 1);
+
+		int current = 0;
+		int son = getGreaterSonIndex(current);
+		
+		
+		while (son < static_cast<int>(PriorityQueueList<T>::list_->size())
+			&& PriorityQueueList<T>::list_->at(current)->getPriority() > PriorityQueueList<T>::list_->at(son)->getPriority())
+		{
+		Utils::swap(PriorityQueueList<T>::list_->at(son), PriorityQueueList<T>::list_->at(current));
+			current = son;
+			son = getGreaterSonIndex(current);
+		}
+
+		T result = item->accessData();
+		delete item;
+		return result;
 	}
 
 	template<typename T>
 	inline int Heap<T>::getParentIndex(int index)
 	{
-		//TODO 06: Heap
-		throw std::runtime_error("Heap<T>::getParentIndex: Not implemented yet.");
+		return (index - 1) / 2;
 	}
 
 	template<typename T>
 	inline int Heap<T>::getGreaterSonIndex(int index)
 	{
-		//TODO 06: Heap
-		throw std::runtime_error("Heap<T>::getGreaterSonIndex: Not implemented yet.");
+		int size = static_cast<int>(PriorityQueueList<T>::list_->size());
+		int lsonindex = 2 * index + 1;
+		int rsonindex = 2 * index + 2;
+		PriorityQueueItem<T>* lson = lsonindex < size ? PriorityQueueList<T>::list_->at(lsonindex) : nullptr;
+		PriorityQueueItem<T>* rson = rsonindex < size ? PriorityQueueList<T>::list_->at(lsonindex) : nullptr;
+		if (lson != nullptr && rson != nullptr)
+			return lson->getPriority() < rson->getPriority() ? lsonindex : rsonindex;
+		else
+			return lsonindex;
 	}
-
 	template<typename T>
 	inline int Heap<T>::indexOfPeek()
 	{
-		//TODO 06: Heap
-		throw std::runtime_error("Heap<T>::indexOfPeek: Not implemented yet.");
+		if (PriorityQueueList<T>::list_->size() == 0) {
+			throw std::logic_error("Heap<T>::indexOfPeek:: Heap is empty.");
+		}
+
+		return 0;
 	}
 }

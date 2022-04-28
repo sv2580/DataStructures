@@ -53,20 +53,39 @@ namespace structures
 	template<typename T>
 	inline Structure& PriorityQueueSortedArrayList<T>::assign(Structure& other)
 	{
-		return PriorityQueueList<T>::assign(dynamic_cast<PriorityQueueList<T>&>(other));
+		return PriorityQueueList<T>::assignPrioQueueList(dynamic_cast<PriorityQueueSortedArrayList<T>&>(other));
 	}
 
 	template<typename T>
 	inline void PriorityQueueSortedArrayList<T>::push(int priority, const T& data)
 	{
-		//TODO 06: PriorityQueueSortedArrayList
-		throw std::runtime_error("PriorityQueueSortedArrayList<T>::push: Not implemented yet.");
+		PriorityQueueItem<T>* item = new PriorityQueueItem<T>(priority, data);
+		int leftIndex = 0;
+		int rightIndex = static_cast<int>(PriorityQueueList<T>::list_->size());
+
+		while (leftIndex < rightIndex)
+		{
+			int middleIndex = leftIndex + (rightIndex - leftIndex) / 2;
+			if (priority < PriorityQueueList<T>::list_->at(middleIndex)->getPriority())
+			{
+				leftIndex = middleIndex + 1;
+			}
+			else
+			{
+				rightIndex = middleIndex;
+			}
+		}
+		PriorityQueueList<T>::list_->insert(item, leftIndex);
+
 	}
 
 	template<typename T>
 	inline int PriorityQueueSortedArrayList<T>::indexOfPeek()
 	{
-		//TODO 06: PriorityQueueSortedArrayList
-		throw std::runtime_error("PriorityQueueSortedArrayList<T>::index_of_peek: Not implemented yet.");
+		if (list_->size() == 0) {
+			throw std::logic_error("riorityQueueSortedArrayList<T>::indexOfPeek List is empty.");
+
+		}
+		return list_->size() - 1;
 	}
 }

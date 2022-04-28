@@ -21,6 +21,113 @@ namespace tests
         virtual structures::PriorityQueue<int>* makePriorityQueue() = 0;
     };
 
+    //********************************************
+
+    class PriorityQueueTestPop
+        : public SimpleTest
+    {
+    public:
+        PriorityQueueTestPop();
+        void testPop(structures::PriorityQueue<int>* list);
+    };
+
+    class HeapPop
+        : public PriorityQueueTestPop
+    {
+    public:
+        void test() override;
+    };
+
+    class TwoListsPop
+        : public PriorityQueueTestPop
+    {
+    public:
+        void test() override;
+    };
+    class PriorityQueueTestPush
+        : public SimpleTest
+    {
+    public:
+        PriorityQueueTestPush();
+        void testPush(structures::PriorityQueue<int>* list) ;
+    };
+
+    class HeapPush
+        : public PriorityQueueTestPush
+    {
+    public:
+        void test() override;
+    };
+
+    class TwoListsPush
+        : public PriorityQueueTestPush
+    {
+    public:
+        void test() override;
+    };
+
+    class PriorityQueueTestPeek
+        : public SimpleTest
+    {
+    public:
+        PriorityQueueTestPeek();
+        void testPeek(structures::PriorityQueue<int>* list);
+    };
+
+    class HeapPeek
+        : public PriorityQueueTestPeek
+    {
+    public:
+        void test() override;
+    };
+
+    class TwoListsPeek
+        : public PriorityQueueTestPeek
+    {
+    public:
+        void test() override;
+    };
+
+    class PriorityQueueTestAssign
+        : public SimpleTest
+    {
+    public:
+        PriorityQueueTestAssign();
+        void testAssign(structures::PriorityQueue<int>* list1, structures::PriorityQueue<int>* list2);
+    };
+
+    class HeapAssign
+        : public PriorityQueueTestAssign
+    {
+    public:
+        void test() override;
+    };
+
+    class TwoListsAssign
+        : public PriorityQueueTestAssign
+    {
+    public:
+        void test() override;
+    };
+
+
+    class HeapCopy
+        : public SimpleTest
+    {
+    public:
+        HeapCopy();
+        void test() override;
+    };
+
+    class TwoListsCopy
+        : public SimpleTest
+    {
+    public:
+        TwoListsCopy();
+        void test() override;
+    };
+    //*******************************************
+
     /// <summary>
     /// Zavola vsetky metody prioritneho frontu.
     /// </summary>

@@ -46,13 +46,12 @@ namespace structures
 	template<typename T>
 	inline Structure& PriorityQueueLinkedList<T>::assign(Structure& other)
 	{
-		return PriorityQueueList<T>::assign(dynamic_cast<PriorityQueueLinkedList<T>&>(other));
+		return PriorityQueueList<T>::assignPrioQueueList(dynamic_cast<PriorityQueueLinkedList<T>&>(other));
 	}
 
 	template<typename T>
 	inline void PriorityQueueLinkedList<T>::push(int priority, const T& data)
 	{
-		//TODO 06: PriorityQueueLinkedList
-		throw std::runtime_error("PriorityQueueLimitedSortedArrayList<T>::push: Not implemented yet.");
+		PriorityQueueList<T>::list_->add(new PriorityQueueItem<T>(priority, data));
 	}
 }

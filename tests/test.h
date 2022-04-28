@@ -8,7 +8,7 @@
 
 namespace tests
 {
-	using Milliseconds = std::chrono::milliseconds;
+	using DurationType = structures::DurationType;
 
 	/// <summary>
 	/// Typ spravy o priebehu testu.
@@ -111,7 +111,7 @@ namespace tests
 
 		void startStopwatch();
 		void stopStopwatch();
-		Milliseconds getElapsedTime() const;
+		DurationType getElapsedTime() const;
 
 	private:
 		using Clock = std::chrono::high_resolution_clock;
@@ -121,7 +121,7 @@ namespace tests
 		TestResult result_;
 		std::vector<TestLog> output_;
 		TimePoint timeZero_;
-		Milliseconds elapsedTime_;
+		DurationType elapsedTime_;
 	};
 
 	/// <summary>

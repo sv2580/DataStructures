@@ -359,16 +359,13 @@ namespace structures
 		{
 			int index = 0;
 			DoubleLinkedListItem<T>* thisItem = _first;
-			DoubleLinkedListItem<T>* dataItem = new DoubleLinkedListItem<T>(data);
-
-			while (index <= _size)
+			while (index < _size)
 			{
-				DoubleLinkedListItem<T>* nextItem = dataItem->getNext();
-				thisItem = nextItem;
-				if (thisItem == dataItem)
+				if (thisItem->accessData() == data)
 				{
 					return index;
 				}
+				thisItem = thisItem->getNext();
 				index++;
 			}
 
@@ -412,18 +409,20 @@ namespace structures
 		DoubleLinkedListItem<T>* result;
 		if (_size > 1 && index  >= _size / 2) {
 			result = _last;
-			for (size_t i = 0; i < _size - index - 1 ; i++)
+			for (int i = 0; i < _size - index - 1 ; i++)
 			{
 				result = result->getPrev();
 			}
 		}
 		else {
 			result = _first;
-			for (size_t i = 0; i < index; i++)
+			for (int i = 0; i < index; i++)
 			{
 				result = result->getNext();
 			}
 		}
+
+
 		return result;
 
 	}
