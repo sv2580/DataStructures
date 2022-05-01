@@ -63,7 +63,7 @@ namespace structures
 	Heap<T>::Heap(Heap<T>& other) :
 		Heap<T>()
 	{
-		assign(other)
+		assign(other);
 	}
 
 	template<typename T>

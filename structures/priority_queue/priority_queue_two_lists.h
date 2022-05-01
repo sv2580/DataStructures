@@ -91,15 +91,16 @@ namespace structures
 		if (this != &other)
 		{
 			PriorityQueueTwoLists<T>& list = dynamic_cast<PriorityQueueTwoLists<T>&>(other);
-
+			//PriorityQueueLimitedSortedArrayList<T>& array = new PriorityQueueLimitedSortedArrayList<T>(*(list.shortList_));
 			this->clear();
-			delete this->shortList_;
-			delete this->longList_;
+			
 
-			this->shortList_->assign(*list.shortList_);
-			this->longList_->assign(*list.longList_);
+			for (PriorityQueueItem<T>* item : *list.longList_) {
+				longList_->add(new PriorityQueueItem<T>(*item));
+			}
 
-			this->longList_->clear();
+			shortList_->assign(*list.shortList_);
+
 		}
 		return *this;
 
@@ -116,11 +117,10 @@ namespace structures
 	{
 		shortList_->clear();
 
-		for (int i = 0; i < longList_->size(); i++)
+		for (PriorityQueueItem<T>* var : *longList_)
 		{
-			delete (*longList_).at(i);
+			delete var;
 		}
-
 		longList_->clear();
 	}
 
@@ -134,6 +134,7 @@ namespace structures
 			if (last != nullptr) {
 				longList_->add(new PriorityQueueItem<T>(priority, data));
 			}
+			delete last;
 		}
 		else {
 			longList_->add(new PriorityQueueItem<T>(priority, data));
@@ -147,17 +148,23 @@ namespace structures
 	T PriorityQueueTwoLists<T>::pop()
 	{
 		T result = shortList_->pop();
-		if (shortList_->size() == 0 || longList_->size() > 0) {
+
+ 		if (shortList_->size() == 0 && longList_->size() > 0) {
 			int newCap = sqrt(longList_->size());
-				if (newCap < 4)
-					newCap = 4;
+				if (newCap < 2)
+					newCap = 2;
 			shortList_->trySetCapacity(newCap);
 			LinkedList<PriorityQueueItem<T>*>* list = new  LinkedList<PriorityQueueItem<T>*>();
 			for(PriorityQueueItem<T>* item : *longList_) {
+				//T data = item->accessData();
 				PriorityQueueItem<T>* newItem = shortList_->pushAndRemove(item->getPriority(), item->accessData());
 				if (newItem != nullptr) {
 					list->add(newItem);
 				}
+				//delete newItem;
+			}
+			for (PriorityQueueItem<T>* item : *longList_) {
+				delete item;
 			}
 			longList_->clear();
 			longList_->assign(*list);

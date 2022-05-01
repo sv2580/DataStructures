@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "priority_queue_sorted_array_list.h"
 #include <stdexcept>
@@ -76,8 +76,8 @@ namespace structures
 	{
 		PriorityQueueLimitedSortedArrayList<T>& otherQueue = dynamic_cast<PriorityQueueLimitedSortedArrayList<T>&>(other);
 		this->capacity_ = otherQueue.capacity_;
-		return PriorityQueueSortedArrayList<T>::assign(otherQueue);
-
+		PriorityQueueSortedArrayList<T>::assign(otherQueue);
+		return *this;
 	}
 
 	template<typename T>
@@ -100,9 +100,15 @@ namespace structures
 			return nullptr;
 		}
 		else {
-			PriorityQueueItem<T>* item = PriorityQueueList<T>::list_->removeAt(0);
-			this->push(priority, data);
-			return item;
+			if (priority < minPriority()) {
+				PriorityQueueItem<T>* item = PriorityQueueList<T>::list_->removeAt(0);
+				this->push(priority, data);
+				return item;
+			}
+			else {
+				return  new PriorityQueueItem<T>(priority, data);
+			}
+			
 		}
 				
 	}
@@ -113,7 +119,7 @@ namespace structures
 		if (PriorityQueueSortedArrayList<T>::list_->size() == 0) {
 			throw std::logic_error("PriorityQueueLimitedSortedArrayList<T>::push: Full capacity.");
 		}
-		return PriorityQueueSortedArrayList<T>::list->at(0)->getPriority();
+		return PriorityQueueSortedArrayList<T>::list_->at(0)->getPriority();
 	}
 
 	template<typename T>

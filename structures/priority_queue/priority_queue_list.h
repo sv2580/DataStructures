@@ -122,7 +122,7 @@ namespace structures
             {
                 list_->add(new PriorityQueueItem<T>(*item));
             }
-            list_->clear();
+            //list_->clear();
         }
         return *this;
     }

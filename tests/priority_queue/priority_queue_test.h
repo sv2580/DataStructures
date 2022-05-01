@@ -3,6 +3,8 @@
 #include "../test.h"
 #include "../../structures/priority_queue/priority_queue.h"
 #include "../../structures/priority_queue/priority_queue_list.h"
+#include "../../structures/heap_monitor.h"
+#include "../../file_log_consumer.h"
 
 namespace tests
 {
@@ -21,8 +23,51 @@ namespace tests
         virtual structures::PriorityQueue<int>* makePriorityQueue() = 0;
     };
 
-    //********************************************
+    //****************Druha uloha
+   
+    class PriorityQueuePerformanceTest : public SimpleTest {
+    public:
+        PriorityQueuePerformanceTest();
+        void PriorityQueuePerformanceTest::testPriorityQueue(structures::PriorityQueue<int>* priorityQueue, char script, std::string file, int count);
+    };
 
+
+    class HeapPerformanceTest : public PriorityQueuePerformanceTest {
+    public:
+        void test() override;
+    };
+
+
+    class TwoListsPerformanceTest : public PriorityQueuePerformanceTest {
+    public:
+        void test() override;
+    };
+
+    //****************Tretia uloha
+
+    class PriorityQueueTimeAnalysis : public SimpleTest {
+    public:
+        PriorityQueueTimeAnalysis();
+        void testPush(structures::PriorityQueue<int>* priorityQueue, std::string file);
+        void testPop(structures::PriorityQueue<int>* priorityQueue, std::string file);
+        void testPeek(structures::PriorityQueue<int>* priorityQueue, std::string file);
+
+    };
+
+
+    class HeapTimeAnalysis : public PriorityQueueTimeAnalysis {
+    public:
+        void test() override;
+    };
+
+
+    class TwoListsTimeAnalysis : public PriorityQueueTimeAnalysis {
+    public:
+        void test() override;
+    };
+
+    
+    //****************Unit testy
     class PriorityQueueTestPop
         : public SimpleTest
     {

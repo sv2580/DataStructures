@@ -76,7 +76,6 @@ namespace structures
 			}
 		}
 		PriorityQueueList<T>::list_->insert(item, leftIndex);
-
 	}
 
 	template<typename T>
