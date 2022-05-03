@@ -125,7 +125,7 @@ namespace structures
 		int lsonindex = 2 * index + 1;
 		int rsonindex = 2 * index + 2;
 		PriorityQueueItem<T>* lson = lsonindex < size ? PriorityQueueList<T>::list_->at(lsonindex) : nullptr;
-		PriorityQueueItem<T>* rson = rsonindex < size ? PriorityQueueList<T>::list_->at(lsonindex) : nullptr;
+		PriorityQueueItem<T>* rson = rsonindex < size ? PriorityQueueList<T>::list_->at(rsonindex) : nullptr;
 		if (lson != nullptr && rson != nullptr)
 			return lson->getPriority() < rson->getPriority() ? lsonindex : rsonindex;
 		else

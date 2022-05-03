@@ -128,13 +128,12 @@ namespace structures
 	void PriorityQueueTwoLists<T>::push(int priority, const T& data)
 	{
 		
-		if (longList_->size() == 0)
+		if (longList_->size() == 0 || shortList_->minPriority() > priority)
 		{
 			PriorityQueueItem<T>* last = shortList_->pushAndRemove(priority,data);
 			if (last != nullptr) {
-				longList_->add(new PriorityQueueItem<T>(priority, data));
+				longList_->add(last);
 			}
-			delete last;
 		}
 		else {
 			longList_->add(new PriorityQueueItem<T>(priority, data));
@@ -156,18 +155,18 @@ namespace structures
 			shortList_->trySetCapacity(newCap);
 			LinkedList<PriorityQueueItem<T>*>* list = new  LinkedList<PriorityQueueItem<T>*>();
 			for(PriorityQueueItem<T>* item : *longList_) {
-				//T data = item->accessData();
 				PriorityQueueItem<T>* newItem = shortList_->pushAndRemove(item->getPriority(), item->accessData());
 				if (newItem != nullptr) {
 					list->add(newItem);
 				}
-				//delete newItem;
 			}
 			for (PriorityQueueItem<T>* item : *longList_) {
 				delete item;
 			}
 			longList_->clear();
-			longList_->assign(*list);
+			for (PriorityQueueItem<T>* item : *list) {
+				longList_->add(item);
+			}
 			delete list;
 		}
 		return result;
