@@ -114,56 +114,74 @@ namespace structures
 	template<typename T, int K>
 	inline KWayTreeNode<T, K>::~KWayTreeNode()
 	{
-		//TODO 07: KWayTreeNode<T>
+		for (size_t i = 0; i < static_cast<int>(children_->size()); i++)
+		{
+			if (children_->at(i) != nullptr)
+			{
+				delete children_->at(i);
+			}
+		}
+		delete children_;
+		children_ = nullptr;
 	}
 
 	template<typename T, int K>
 	inline TreeNode<T>* KWayTreeNode<T, K>::shallowCopy()
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::shallowCopy: Not implemented yet.");
+		return new KWayTreeNode<T, K>(*this);
 	}
 
 	template<typename T, int K>
 	inline bool KWayTreeNode<T, K>::isLeaf()
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::isLeaf: Not implemented yet.");
+		for (size_t i = 0; i < K; i++)
+		{
+			if (children_->at(i) != nullptr)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	template<typename T, int K>
 	inline TreeNode<T>* KWayTreeNode<T, K>::getSon(int order)
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::getSon: Not implemented yet.");
+		return children_->at(order);
 	}
 
 	template<typename T, int K>
 	inline void KWayTreeNode<T, K>::insertSon(TreeNode<T>* son, int order)
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::insertSon: Not implemented yet.");
+		replaceSon(son, order);
 	}
 
 	template<typename T, int K>
 	inline TreeNode<T>* KWayTreeNode<T, K>::replaceSon(TreeNode<T>* son, int order)
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::replaceSon: Not implemented yet.");
+		KWayTreeNode<T, K>* result = children_->at(order);
+		children_->at(order) = dynamic_cast<KWayTreeNode<T, K>*>(son);
+		if (son != nullptr)
+		{
+			son->setParent(this);
+		}
+		if (result != nullptr)
+		{
+			result->setParent(nullptr);
+		}
+		return result;
 	}
 
 	template<typename T, int K>
 	inline TreeNode<T>* KWayTreeNode<T, K>::removeSon(int order)
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::removeSon: Not implemented yet.");
+		return replaceSon(nullptr, order);
 	}
 
 	template<typename T, int K>
 	inline int KWayTreeNode<T, K>::degree()
 	{
-		//TODO 07: KWayTreeNode<T>
-		throw std::runtime_error("KWayTreeNode<T>::degree: Not implemented yet.");
+		return K;
 	}
 
 	template<typename T, int K>

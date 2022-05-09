@@ -140,85 +140,73 @@ namespace structures
 	template<typename T>
 	inline TreeNode<T>* BinaryTreeNode<T>::shallowCopy()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::shallowCopy: Not implemented yet.");
+		return new BinaryTreeNode<T>(*this);
 	}
 
 	template<typename T>
 	inline BinaryTreeNode<T>* BinaryTreeNode<T>::getParent()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::getParent: Not implemented yet.");
+		return dynamic_cast<BinaryTreeNode<T>*>(TreeNode<T>::getParent());
 	}
 
 	template<typename T>
 	inline BinaryTreeNode<T>* BinaryTreeNode<T>::getLeftSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::getLeftSon: Not implemented yet.");
+		return dynamic_cast<BinaryTreeNode<T>*>(getSon(LEFT_SON));
 	}
 
 	template<typename T>
 	inline BinaryTreeNode<T>* BinaryTreeNode<T>::getRightSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::getRightSon: Not implemented yet.");
+		return dynamic_cast<BinaryTreeNode<T>*>(getSon(RIGHT_SON));
 	}
 
 	template<typename T>
 	inline void BinaryTreeNode<T>::setLeftSon(BinaryTreeNode<T>* leftSon)
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::setLeftSon: Not implemented yet.");
+		insertSon(leftSon, LEFT_SON);
 	}
 
 	template<typename T>
 	inline void BinaryTreeNode<T>::setRightSon(BinaryTreeNode<T>* rightSon)
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::setRightSon: Not implemented yet.");
+		insertSon(rightSon, RIGHT_SON);
 	}
 
 	template<typename T>
 	inline BinaryTreeNode<T>* BinaryTreeNode<T>::changeLeftSon(BinaryTreeNode<T>* leftSon)
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::changeLeftSon: Not implemented yet.");
+		return dynamic_cast<BinaryTreeNode<T>*>(replaceSon(leftSon, LEFT_SON));
 	}
 
 	template<typename T>
 	inline BinaryTreeNode<T>* BinaryTreeNode<T>::changeRightSon(BinaryTreeNode<T>* rightSon)
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::changeRightSon: Not implemented yet.");
+		return dynamic_cast<BinaryTreeNode<T>*>(replaceSon(rightSon, RIGHT_SON));
 	}
 
 	template<typename T>
 	inline bool BinaryTreeNode<T>::isLeftSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::isLeftSon: Not implemented yet.");
+		return getParent() != nullptr && getParent()->getLeftSon() == this;
 	}
 
 	template<typename T>
 	inline bool BinaryTreeNode<T>::isRightSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::isRightSon: Not implemented yet.");
+		return getParent() != nullptr && getParent()->getRightSon() == this;
 	}
 
 	template<typename T>
 	inline bool BinaryTreeNode<T>::hasLeftSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::hasLeftSon: Not implemented yet.");
+		return getLeftSon() != nullptr;
 	}
 
 	template<typename T>
 	inline bool BinaryTreeNode<T>::hasRightSon()
 	{
-		//TODO 07: BinaryTreeNode<T>
-		throw std::runtime_error("BinaryTreeNode<T>::hasRightSon: Not implemented yet.");
+		return getRightSon() != nullptr;
 	}
 
 	template<typename T>
@@ -262,8 +250,13 @@ namespace structures
 	template<typename T>
 	inline void BinaryTree<T>::InOrderTreeIterator::populatePath(TreeNode<T>* current)
 	{
-		//TODO 07: BinaryTree<T>::InOrderTreeIterator
-		throw std::runtime_error("BinaryTree<T>::InOrderTreeIterator::populatePath: Not implemented yet.");
+		BinaryTreeNode<T>* currrentBinaryNode = dynamic_cast<BinaryTreeNode<T>*>(current);
+		if (currrentBinaryNode != nullptr)
+		{
+			populatePath(currrentBinaryNode->getLeftSon());
+			path_->push(currrentBinaryNode);
+			populatePath(currrentBinaryNode->getRightSon());
+		}
 	}
 
 }

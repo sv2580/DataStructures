@@ -164,9 +164,7 @@ namespace structures
 				delete item;
 			}
 			longList_->clear();
-			for (PriorityQueueItem<T>* item : *list) {
-				longList_->add(item);
-			}
+			longList_->assign(*list);
 			delete list;
 		}
 		return result;

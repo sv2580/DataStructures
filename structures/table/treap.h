@@ -152,7 +152,7 @@ namespace structures
 	template<typename K, typename T>
 	inline bool Treap<K, T>::equals(Structure& other)
 	{
-		return Table<K, T>::equals(dynamic_cast<Treap<K, T>*>(&other));
+		return Table<K, T>::equalsTable(dynamic_cast<Treap<K, T>*>(&other));
 	}
 
 	template<typename K, typename T>

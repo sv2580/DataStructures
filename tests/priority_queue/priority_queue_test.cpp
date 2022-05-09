@@ -294,9 +294,9 @@ namespace tests
 
     void HeapTimeAnalysis::test()
     {
-        this->testPush(new structures::Heap<int>(), "Heap_Push.csv");
         this->testPop(new structures::Heap<int>(), "Heap_Pop.csv");
         this->testPeek(new structures::Heap<int>(), "Heap_Peek.csv");
+        this->testPush(new structures::Heap<int>(), "Heap_Push1.csv");
 
 
     }
@@ -345,13 +345,14 @@ namespace tests
 
     void PriorityQueueTestPush::testPush(structures::PriorityQueue<int>* list)
     {
-        logInfo("Testing pushing, pushing random values with priorities 10,9,...");
+        logInfo("Testing pushing, pushing values with priorities 10,9,...");
         std::string s = "";
         for (int i = 10; i > 0; i--)
         {
-            int random = rand() % 10;
-            list->push(random, i);
+            list->push(i, i);
             s += std::to_string(i);
+            s += " ";
+
         }
         logInfo("Pushed values:" + s);
         s = "";

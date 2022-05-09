@@ -79,7 +79,7 @@ namespace structures
 
 		int current = static_cast<int>(PriorityQueueList<T>::list_->size()) - 1;
 		int parent = getParentIndex(current);
-		while (parent >= 0 && PriorityQueueList<T>::list_->at(current)->getPriority() < PriorityQueueList<T>::list_->at(parent)->getPriority())
+		while(parent >= 0 && PriorityQueueList<T>::list_->at(current)->getPriority() < PriorityQueueList<T>::list_->at(parent)->getPriority())
 		{
 			Utils::swap(PriorityQueueList<T>::list_->at(current), PriorityQueueList<T>::list_->at(parent));
 			current = parent;
