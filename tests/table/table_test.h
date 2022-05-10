@@ -104,6 +104,26 @@ namespace tests
     };
 
 //**************************************************
+//clear, find&tryfind, insert, remove, containsKey, equalsTable
+	class TableTryAndFindTest : SimpleTest{
+
+	};
+
+	class TableInsertTest : SimpleTest{
+
+	};
+
+	class TableRemoveTest : SimpleTest{
+
+	};
+
+	class TableContainsKeyTest : SimpleTest{
+
+	};
+
+	class TableEqualsTableTest : SimpleTest{
+
+	};
 
 //**************************************************
 	/// <summary>
