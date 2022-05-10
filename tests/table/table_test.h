@@ -104,26 +104,96 @@ namespace tests
     };
 
 //**************************************************
-//clear, find&tryfind, insert, remove, containsKey, equalsTable
+//clear, find&tryfind, insert, remove, containsKey, equalsTable, assign
 	class TableTryAndFindTest : SimpleTest{
-
+		TableTryAndFindTest();
+		void testClear(structures::Table<int,int>* table);
 	};
+
+	class SortedSequenceTableTryAndFindTest : public TableTryAndFindTest {
+    public:
+        void test() override;
+    };
+
+    class BinarySearchTreeTryAndFindTest : public TableTryAndFindTest {
+    public:
+        void test() override;
+    };
 
 	class TableInsertTest : SimpleTest{
-
+		TableInsertTest();
+		void testInsert(structures::Table<int,int>* table);
 	};
+
+	class SortedSequenceTableInsertTest : public TableInsertTest {
+    public:
+        void test() override;
+    };
+
+    class BinarySearchTreeInsertTest : public TableInsertTest {
+    public:
+        void test() override;
+    };
 
 	class TableRemoveTest : SimpleTest{
-
+		TableRemoveTest();
+		void testRemove(structures::Table<int,int>* table);
 	};
+
+	class SortedSequenceTableRemoveTest : public TableRemoveTest {
+    public:
+        void test() override;
+    };
+
+
+    class BinarySearchTreeRemoveTest : public TableRemoveTest {
+    public:
+        void test() override;
+    };
 
 	class TableContainsKeyTest : SimpleTest{
+		TableContainsKeyTest();
+		void testContainsKey(structures::Table<int,int>* table);
+	}; 
 
-	};
+	class SortedSequenceTableContainsKeyTest : public TableContainsKeyTest {
+    public:
+        void test() override;
+    };
+
+
+    class BinarySearchTreeContainsKeyTest : public TableContainsKeyTest {
+    public:
+        void test() override;
+    };
 
 	class TableEqualsTableTest : SimpleTest{
-
+		TableEqualsTableTest();
+		void testEqualsTable(structures::Table<int,int>* table1, structures::Table<int,int>* table2);
 	};
+
+	class SortedSequenceTableEqualsTableTest : public TableEqualsTableTest {
+    public:
+        void test() override;
+    };
+
+
+    class BinarySearchTreeEqualsTableTest : public TableEqualsTableTest {
+    public:
+        void test() override;
+    };
+
+	class SortedSequenceTableAssignTest : public SimpleTest {
+    public:
+		SortedSequenceTableAssignTest();
+        void test() override;
+    };
+
+    class BinarySearchTreeAssignTest : public SimpleTest {
+    public:
+		BinarySearchTreeAssignTest();
+        void test() override;
+    };
 
 //**************************************************
 	/// <summary>
