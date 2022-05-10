@@ -2,7 +2,8 @@
 
 #include "../test.h"
 #include "../../structures/table/table.h"
-
+#include "../../file_log_consumer.h"
+#include "../../structures/heap_monitor.h"
 namespace tests
 {
 	/// <summary>
@@ -33,6 +34,81 @@ namespace tests
 	/// <summary>
 	/// Zavola vsetky metody danej tabulky.
 	/// </summary>
+	class SortedSequenceTableTestInterface
+		: public TableTestInterface
+	{
+	protected:
+		structures::Table<int, int>* makeTable() override;
+	};
+
+		/// <summary>
+	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
+	/// </summary>
+	class BinarySearchTreeTestOverall
+		: public ComplexTest
+	{
+	public:
+		BinarySearchTreeTestOverall();
+	};
+
+	/// <summary>
+	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
+	/// </summary>
+	class SortedSequenceTableTestOverall
+		: public ComplexTest
+	{
+	public:
+		SortedSequenceTableTestOverall();
+	};
+
+	
+    //****************Druha uloha
+   
+    class TablePerformanceTest : public SimpleTest {
+    public:
+        TablePerformanceTest();
+        void testTable(structures::Table<int, int>* table, char script, std::string file, int count);
+    };
+
+
+    class SortedSequenceTablePerformanceTest : public TablePerformanceTest {
+    public:
+        void test() override;
+    };
+
+
+    class BinarySearchTreePerformanceTest : public TablePerformanceTest {
+    public:
+        void test() override;
+    };
+
+    //****************Tretia uloha
+
+    class TableTimeAnalysis : public SimpleTest {
+    public:
+        TableTimeAnalysis();
+        void testInsert(structures::Table<int,int>* table, std::string file);
+        void testRemove(structures::Table<int,int>* table, std::string file);
+        void testTryFind(structures::Table<int,int>* table, std::string file);
+    };
+
+    class SortedSequenceTableTimeAnalysis : public TableTimeAnalysis {
+    public:
+        void test() override;
+    };
+
+
+    class BinarySearchTreeTimeAnalysis : public TableTimeAnalysis {
+    public:
+        void test() override;
+    };
+
+//**************************************************
+
+//**************************************************
+	/// <summary>
+	/// Zavola vsetky metody danej tabulky.
+	/// </summary>
 	class HashTableTestInterface
 		: public TableTestInterface
 	{
@@ -44,16 +120,6 @@ namespace tests
 	/// Zavola vsetky metody danej tabulky.
 	/// </summary>
 	class LinkedTableTestInterface
-		: public TableTestInterface
-	{
-	protected:
-		structures::Table<int, int>* makeTable() override;
-	};
-
-	/// <summary>
-	/// Zavola vsetky metody danej tabulky.
-	/// </summary>
-	class SortedSequenceTableTestInterface
 		: public TableTestInterface
 	{
 	protected:
@@ -80,15 +146,6 @@ namespace tests
 		structures::Table<int, int>* makeTable() override;
 	};
 
-	/// <summary>
-	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
-	/// </summary>
-	class BinarySearchTreeTestOverall
-		: public ComplexTest
-	{
-	public:
-		BinarySearchTreeTestOverall();
-	};
 
 	/// <summary>
 	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
@@ -110,15 +167,6 @@ namespace tests
 		LinkedTableTestOverall();
 	};
 
-	/// <summary>
-	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
-	/// </summary>
-	class SortedSequenceTableTestOverall
-		: public ComplexTest
-	{
-	public:
-		SortedSequenceTableTestOverall();
-	};
 
 	/// <summary>
 	/// Zahrna v sebe vsetky testy, ktore testuju danu tabulku.
