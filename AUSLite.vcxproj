@@ -128,7 +128,6 @@
     <ClCompile Include="gui\gui_log_consumer.cpp" />
     <ClCompile Include="gui\main_form.cpp" />
     <ClCompile Include="structures\structure.cpp" />
-    <ClCompile Include="structures\table\sorting\sort.cpp" />
     <ClCompile Include="structures\utils.cpp" />
     <ClCompile Include="structures\vector\vector.cpp" />
     <ClCompile Include="structures\_logger\logger.cpp" />

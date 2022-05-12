@@ -123,9 +123,6 @@
     <ClCompile Include="tests\table\table_test.cpp">
       <Filter>tests\table</Filter>
     </ClCompile>
-    <ClCompile Include="structures\table\sorting\sort.cpp">
-      <Filter>structures\table\sorting</Filter>
-    </ClCompile>
     <ClCompile Include="tests\tree\tree_test.cpp">
       <Filter>tests\tree</Filter>
     </ClCompile>
