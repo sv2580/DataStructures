@@ -4,6 +4,10 @@
 #include "../../structures/table/table.h"
 #include "../../file_log_consumer.h"
 #include "../../structures/heap_monitor.h"
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 namespace tests
 {
 	/// <summary>
@@ -105,9 +109,10 @@ namespace tests
 
 //**************************************************
 //clear, find&tryfind, insert, remove, containsKey, equalsTable, assign
-	class TableTryAndFindTest : SimpleTest{
+	class TableTryAndFindTest : public SimpleTest{
+	public:
 		TableTryAndFindTest();
-		void testClear(structures::Table<int,int>* table);
+		void testTryAndFind(structures::Table<int,int>* table);
 	};
 
 	class SortedSequenceTableTryAndFindTest : public TableTryAndFindTest {
@@ -120,7 +125,24 @@ namespace tests
         void test() override;
     };
 
-	class TableInsertTest : SimpleTest{
+	class TableClear : public SimpleTest {
+	public:
+		TableClear();
+		void testClear(structures::Table<int, int>* table);
+	};
+
+	class SortedSequenceTableClearTest : public TableClear {
+	public:
+		void test() override;
+	};
+
+	class BinarySearchClearTest : public TableClear {
+	public:
+		void test() override;
+	};
+
+	class TableInsertTest :public SimpleTest{
+	public:
 		TableInsertTest();
 		void testInsert(structures::Table<int,int>* table);
 	};
@@ -135,7 +157,8 @@ namespace tests
         void test() override;
     };
 
-	class TableRemoveTest : SimpleTest{
+	class TableRemoveTest : public SimpleTest{
+	public:
 		TableRemoveTest();
 		void testRemove(structures::Table<int,int>* table);
 	};
@@ -151,7 +174,8 @@ namespace tests
         void test() override;
     };
 
-	class TableContainsKeyTest : SimpleTest{
+	class TableContainsKeyTest : public SimpleTest{
+	public:
 		TableContainsKeyTest();
 		void testContainsKey(structures::Table<int,int>* table);
 	}; 
@@ -167,21 +191,7 @@ namespace tests
         void test() override;
     };
 
-	class TableEqualsTableTest : SimpleTest{
-		TableEqualsTableTest();
-		void testEqualsTable(structures::Table<int,int>* table1, structures::Table<int,int>* table2);
-	};
 
-	class SortedSequenceTableEqualsTableTest : public TableEqualsTableTest {
-    public:
-        void test() override;
-    };
-
-
-    class BinarySearchTreeEqualsTableTest : public TableEqualsTableTest {
-    public:
-        void test() override;
-    };
 
 	class SortedSequenceTableAssignTest : public SimpleTest {
     public:
@@ -194,6 +204,18 @@ namespace tests
 		BinarySearchTreeAssignTest();
         void test() override;
     };
+
+	class SortedSequenceTableEqualsTest : public SimpleTest {
+	public:
+		SortedSequenceTableEqualsTest();
+		void test() override;
+	};
+
+	class BinarySearchTreeEqualsTest : public SimpleTest {
+	public:
+		BinarySearchTreeEqualsTest();
+		void test() override;
+	};
 
 //**************************************************
 	/// <summary>

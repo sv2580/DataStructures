@@ -363,8 +363,8 @@ namespace tests
 
 	void ArrayListTimeAnalysis::test()
 	{
-		//this->testListAt(new structures::ArrayList<int>(), "AL_Time_At.csv");
-		//this->testListRemoveAt(new structures::ArrayList<int>(), "AL_Time_RemoveAt.csv");
+		this->testListAt(new structures::ArrayList<int>(), "AL_Time_At.csv");
+		this->testListRemoveAt(new structures::ArrayList<int>(), "AL_Time_RemoveAt.csv");
 		this->testInsert(new structures::ArrayList<int>(), "AL_Time_Insert.csv");
 
 
@@ -373,8 +373,8 @@ namespace tests
 
 	void DoubleLinkedListTimeAnalysis::test()
 	{
-		//this->testListAt(new structures::DoubleLinkedList<int>(), "DLL_Time_At.csv");
-		//this->testListRemoveAt(new structures::DoubleLinkedList<int>(), "DLL_Time_RemoveAt.csv");
+		this->testListAt(new structures::DoubleLinkedList<int>(), "DLL_Time_At.csv");
+		this->testListRemoveAt(new structures::DoubleLinkedList<int>(), "DLL_Time_RemoveAt.csv");
 		this->testInsert(new structures::DoubleLinkedList<int>(), "DLL_Time_Insert.csv");
 	}
 

@@ -115,19 +115,19 @@ namespace structures
 		}
 
 		int pivot = (indexStart + indexEnd) / 2;
-		K keyatpivot = list_->at(pivot)->getKey();
+		K keyAtPivot = list_->at(pivot)->getKey();
 
-		if (keyatpivot == key) {
+		if (keyAtPivot == key) {
 			found = true;
 			return pivot;
 		}
 		else {
 			if (indexStart == indexEnd) {
 				found = false;
-				return key < keyatpivot ? pivot : pivot + 1;
+				return key < keyAtPivot ? pivot : pivot + 1;
 			}
 			else {
-				if (keyatpivot < key) {
+				if (keyAtPivot < key) {
 					indexStart = pivot + 1;
 				}
 				else {

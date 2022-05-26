@@ -105,9 +105,6 @@ namespace structures
 		/// <param name = "node"> Vrchol stromu, ktory ma byt vyjmuty. </param>
 		/// <remarks> Vrchol nebude zruseny, iba odstraneny zo stromu a ziadne vrcholy nebudu ukazovat na neho a ani on nebude ukazovat na ziadne ine vrcholy. </remarks>
 		void extractNode(BSTTreeNode* node);
-
-	private:
-		int numberOfSons(BSTTreeNode* node);
 	};
 
 	template<typename K, typename T>
@@ -143,20 +140,20 @@ namespace structures
 	inline Structure& BinarySearchTree<K, T>::assign(Structure& other)
 	{
 		if (this != &other) {
-			BinarySearchTree<K, T>& otherTable = dynamic_cast<BinarySearchTree<K, T>&>(other);
+			BinarySearchTree<K, T>& otherBst = dynamic_cast<BinarySearchTree<K, T>&>(other);
 			clear();
 
-			Iterator<TableItem<K, T>*>* current = new Tree<TableItem<K, T>*>::PreOrderTreeIterator(otherTable.binaryTree_->getRoot());
-			Iterator<TableItem<K, T>*>* last = new Tree<TableItem<K, T>*>::PreOrderTreeIterator(nullptr);
+			Iterator<TableItem<K, T>*>* iterCurrent = new Tree<TableItem<K, T>*>::PreOrderTreeIterator(otherBst.binaryTree_->getRoot());
+			Iterator<TableItem<K, T>*>* iterEnd = new Tree<TableItem<K, T>*>::PreOrderTreeIterator(nullptr);
 
-			while (*current != *last) {
-				TableItem<K, T>* item = *(*current);
+			while (*iterCurrent != *iterEnd) {
+				TableItem<K, T>* item = *(*iterCurrent);
 				insert(item->getKey(), item->accessData());
-				(*current)++;
+				++(*iterCurrent);
 			}
 
-			delete current;
-			delete last;
+			delete iterCurrent;
+			delete iterEnd;
 		}
 		return *this;
 	}
@@ -176,21 +173,22 @@ namespace structures
 			return node->accessData()->accessData();
 		}
 		else {
-			throw std::out_of_range("BinarySearchTree<K, T>::find: Data not found!");
+			throw std::out_of_range("Data not found!");
 		}
 	}
 
 	template<typename K, typename T>
 	inline void BinarySearchTree<K, T>::insert(const K& key, const T& data)
 	{
-		TableItem<K, T>* item = new TableItem<K, T>(key, data);
-		BinaryTreeNode<TableItem<K, T>*>* treeNode = new BinaryTreeNode<TableItem<K, T>*>(item);
+		TableItem<K, T>* tableItem = new TableItem<K, T>(key, data);
+		BinaryTreeNode<TableItem<K, T>*>* treeNode = new BinaryTreeNode<TableItem<K, T>*>(tableItem);
 
 		if (!tryToInsertNode(treeNode)) {
-			delete item;
+			delete tableItem;
 			delete treeNode;
-			throw std::logic_error("BinarySearchTree<K, T>::insert: Key is already present in the table!");
+			throw std::logic_error("Key already present in the table!");
 		}
+
 	}
 
 	template<typename K, typename T>
@@ -208,7 +206,7 @@ namespace structures
 			return result;
 		}
 		else {
-			throw std::logic_error("BinarySearchTree<K, T>::remove: Key was not found!");
+			throw std::logic_error("Key not found!");
 		}
 	}
 
@@ -217,9 +215,8 @@ namespace structures
 	{
 		bool result = false;
 		BSTTreeNode* node = findBSTNode(key, result);
-		if (result){
+		if (result)
 			data = node->accessData()->accessData();
-		}
 		return result;
 	}
 
@@ -234,9 +231,9 @@ namespace structures
 	template<typename K, typename T>
 	inline void BinarySearchTree<K, T>::clear()
 	{
-		for (TableItem<K, T>* item : *binaryTree_)
+		for (TableItem<K, T>* tableItem : *binaryTree_)
 		{
-			delete item;
+			delete tableItem;
 		}
 		binaryTree_->clear();
 		size_ = 0;
@@ -257,17 +254,17 @@ namespace structures
 	template<typename K, typename T>
 	inline typename BinarySearchTree<K, T>::BSTTreeNode* BinarySearchTree<K, T>::findBSTNode(K key, bool& found)
 	{
-		BSTTreeNode* treeNode = dynamic_cast<BSTTreeNode*>(binaryTree_->getRoot());
-		BSTTreeNode* result = treeNode;
+		BSTTreeNode* node = dynamic_cast<BSTTreeNode*>(binaryTree_->getRoot());
+		BSTTreeNode* result = node;
 
-		while (treeNode != nullptr && treeNode->accessData()->getKey() != key) {
-			treeNode = key < treeNode->accessData()->getKey() ? treeNode->getLeftSon() : treeNode->getRightSon();
+		while (node != nullptr && node->accessData()->getKey() != key) {
+			node = key < node->accessData()->getKey() ? node->getLeftSon() : node->getRightSon();
 
-			if (treeNode != nullptr)
-				result = treeNode;
+			if (node != nullptr)
+				result = node;
 		}
 
-		found = treeNode != nullptr && treeNode->accessData()->getKey() == key;
+		found = node != nullptr && node->accessData()->getKey() == key;
 		return result;
 	}
 
@@ -300,7 +297,7 @@ namespace structures
 		BSTTreeNode* parent = node->getParent();
 		BSTTreeNode* replaceNode = nullptr;
 
-		switch (numberOfSons(node)) {
+		switch (node->numberOfSons()) {
 		case 1:
 			replaceNode = node->hasLeftSon() ? node->changeLeftSon(nullptr) : node->changeRightSon(nullptr);
 			break;
@@ -329,16 +326,4 @@ namespace structures
 			replaceNode->setParent(parent);
 		}
 	}
-
-	template<typename K, typename T>
-	inline int BinarySearchTree<K, T>::numberOfSons(BSTTreeNode* node)
-	{
-		int result = 0;
-		if (node->hasLeftSon())
-			result++;
-		if (node->hasRightSon())
-			result++;
-		return result;
-	}
-
 }

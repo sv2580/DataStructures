@@ -104,68 +104,71 @@ namespace structures
 	template<typename K, typename T>
 	inline T& SequenceTable<K, T>::find(const K& key)
 	{
-		TableItem<K, T>* item = findTableItem(key);
-		if (item != nullptr) {
-			return item->accessData();
+		TableItem<K, T>* tableItem = findTableItem(key);
+		if (tableItem != nullptr) {
+			return tableItem->accessData();
 		}
 		else {
-			throw std::out_of_range("SequenceTable<K, T>::find: Key is not present!");
+			throw std::out_of_range("SequenceTable<K, T>::operator[]: Data is out of range!");
 		}
-	}
+		
+		}
+	
 
 	template<typename K, typename T>
 	inline void SequenceTable<K, T>::insert(const K& key, const T& data)
 	{
-		if (!containsKey(key)) {
-			TableItem<K, T>* item = new TableItem<K, T>(key, data);
-			list_->add(item);
+		
+		if (!this->containsKey(key)){
+			this->list_->add(new TableItem<K, T>(key, data));
 		}
 		else {
-			throw std::logic_error("SequenceTable<K, T>::insert: Key is already present in the table!");
+			throw std::logic_error("Duplicated key!");
 		}
 	}
 
 	template<typename K, typename T>
 	inline T SequenceTable<K, T>::remove(const K& key)
 	{
-		TableItem<K, T>* item = findTableItem(key);
+		TableItem<K, T>* item = this->findTableItem(key);
 		if (item != nullptr) {
 			list_->tryRemove(item);
-			T result = item->accessData();
+			T data = item->accessData();
 			delete item;
-			return result;
+			return data;
 		}
 		else {
-			throw std::logic_error("SequenceTable<K, T>::remove: Key was not found!");
+			throw std::logic_error("No such key!");
 		}
 	}
 
 	template<typename K, typename T>
 	inline bool SequenceTable<K, T>::tryFind(const K& key, T& data)
 	{
-		TableItem<K, T>* item = findTableItem(key);
-		if (item != nullptr) {
-			data = item->accessData();
-			return true;
-		}
-		else {
-			return false;
-		}
+		TableItem<K, T>* item = this->findTableItem(key);
+			if (item != nullptr) 
+			{
+				data = item->accessData();
+				return true;
+			}
+			else {
+				return false;
+			}
 	}
 
 	template<typename K, typename T>
 	inline bool SequenceTable<K, T>::containsKey(const K& key)
 	{
-		T data;
-		return tryFind(key, data);
+		
+		return this->findTableItem(key) != nullptr;
+		
 	}
 
 	template<typename K, typename T>
 	inline void SequenceTable<K, T>::clear()
 	{
-		for (TableItem<K, T>* tableItem : *this)
-		{
-			delete tableItem;
+		for (TableItem<K, T>* item : *list_) {
+			delete item;
 		}
 		list_->clear();
 	}
@@ -192,22 +195,25 @@ namespace structures
 	template<typename K, typename T>
 	inline TableItem<K, T>* SequenceTable<K, T>::findTableItem(const K& key)
 	{
+		//toto neviem ci je gud robila som to sama :D
 		for (TableItem<K, T>* item : *this) {
 			if (item->getKey() == key) {
 				return item;
 			}
+			return nullptr;
 		}
-		return nullptr;
 	}
 	
 	template<typename K, typename T>
 	inline SequenceTable<K, T>& SequenceTable<K, T>::assignSequenceTable(SequenceTable<K, T>& other)
 	{
-		if (this != &other) {
-			SequenceTable<K, T>& otherTable = dynamic_cast<SequenceTable<K, T>&>(other);
+		if (this != &other) 
+		{
+
 			clear();
-			for (TableItem<K, T>* item : *otherTable.list_) {
-				list_->add(new TableItem<K, T>(*item));
+			for (TableItem<K, T>* otherItem : *(other.list_))
+			{
+				this->list_->add(new TableItem<K, T>(otherItem->getKey(), otherItem->accessData()));
 			}
 		}
 		return *this;

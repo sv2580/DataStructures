@@ -10,8 +10,6 @@
 #include "../tests/priority_queue/priority_queue_test.h"
 #include "../tests/tree/tree_test.h"
 #include "../tests/table/table_test.h"
-#include "../tests/matrix/matrix_test.h"
-
 #include "../tests/stdvector/stdvector_test.h"
 #include <algorithm>
 #include <vector>
@@ -38,7 +36,6 @@ void main(array<String^>^)
 
 	// TODO 03: List
 	//tests.emplace_back(new tests::ListTestOverall());
-	//tests.emplace_back(new tests::MatrixTestOverall());
 
 	// TODO 05: Stack
 	//tests.emplace_back(new tests::StackTestOverall());
@@ -263,9 +260,9 @@ namespace gui
 		columnGlobalLogMessage->Width = WidthFitContent;
 	}
 
-	System::Void gui::MainForm::LogDuration(size_t size, tests::DurationType duration, const std::string& message)
+	System::Void gui::MainForm::LogDuration(size_t size, tests::Milliseconds duration, const std::string& message)
 	{
-		String^ str = "Size: " + size + ", Duration: " + duration.count() + " mc, " + gcnew String(message.c_str());
+		String^ str = "Size: " + size + ", Duration: " + duration.count() + " microseconds, " + gcnew String(message.c_str());
 		this->LogMessage(structures::LogType::Duration, str);
 		return System::Void();
 	}
